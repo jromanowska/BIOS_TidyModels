@@ -1,0 +1,394 @@
+---
+title: "Tidy modeling - part 2"
+author: "Julia Romanowska"
+date: "`r Sys.Date()`"
+output:
+  rmdformats::downcute:
+    self_contained: true
+    highlight: tango
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(tidymodels)
+library(skimr)
+library(fontawesome)
+
+set.seed(123)
+```
+
+# CHAPTER 4 - _Ames data_
+
+The dataset contains various information on ca.3,000 properties in Ames, Iowa,
+USA. Look at the data:
+
+```{r}
+data(ames)
+ames %>% glimpse()
+skim(ames)
+```
+
+> `r fa("info-circle", fill = "darkgreen")` _The
+[`modeldata`](https://modeldata.tidymodels.org/reference/index.html) 
+package contains lots of other useful datasets!_
+
+## Exploring - `Sale_Price`
+
+The price for each house is the feature we're going to predict.
+
+```{r price_hist}
+ggplot(ames, aes(Sale_Price)) +
+  geom_histogram(bins = 50) +
+  theme_minimal()
+```
+
+Data is skewed, so we choose to log-transform it.
+
+```{r}
+ggplot(ames, aes(Sale_Price)) +
+  geom_histogram(bins = 50) +
+  scale_x_log10() +
+  theme_minimal()
+```
+
+```{r log_trans}
+ames <- ames %>% mutate(Sale_Price = log10(Sale_Price))
+```
+
+> **It's important to do some exploratory analysis to decide on any preprocessing
+of columns!**    
+> `r fa("question-circle", fill = "navy")` Some questions to keep in mind:    
+> - any strange things about distributions of variables?
+> - any correlation between variables? _(redundancy)_
+> - any immediate association between variables (_predictors_) and the outcome?
+
+----
+
+# CHAPTER 5 - _Spending our data_
+
+We need to use the data wisely by allocating its parts to different tasks and
+not reusing the data for different tasks!
+
+Splitting data {.tabset}
+--------------------------
+
+### Training
+
+- This is usually the majority of data.
+- Used to _develop the model_
+
+### Testing
+
+- Reserve a set for testing the best model(s).
+
+### Validation
+
+- Used to measure performance of trained models _before_ testing.
+- Mostly used with resampling methods.
+- Discussed in [Chapter 10](https://www.tmwr.org/resampling.html#validation)
+
+## How to split?
+
+The code below splits the entire dataset into _training_ and _testing_ sets,
+with the proportions 80% and 20%, respectively.
+
+```{r simple_split}
+ames_split <- initial_split(ames, prop = 0.8)
+ames_train <- training(ames_split)
+ames_test  <-  testing(ames_split)
+
+dim(ames_train)
+dim(ames_test)
+```
+
+However, when the data is not balanced, it might be better to split using strata.
+
+```{r}
+ames_split <- initial_split(ames, prop = 0.80, strata = Sale_Price)
+ames_train <- training(ames_split)
+ames_test  <-  testing(ames_split)
+
+dim(ames_train)
+```
+
+When the dataset includes a time variable, it's adviced to use the newest
+data for testing. Then, one might use the `initial_time_split()` function.
+
+> `r fa("exclamation-circle", fill = "crimson")` Since these functions split **by row**,
+> it's important to check that in our data, each row is an independent sample!
+
+Sometimes, it might be useful to re-sample training set to check how the model
+reacts to various biases and class imbalance.
+
+---
+
+# CHAPTER 6 - _Recipes_
+
+> `r fa("info-circle", fill = "darkgreen")` **Feature engineering:**    
+> _creating new variables (predictors) to increase effectiveness of a model_
+
+Most often, before giving the data to the model, we need to transform some of
+the variables. This can be any operation that involves one or more features/variables,
+such as **encoding, combining, imputing, clustering**, etc. Some models _require_
+variables to be transformed first [(see here for a short list)](https://www.tmwr.org/pre-proc-table.html).
+All this can be nicely arranged and contained by using the [`recipes` package](https://recipes.tidymodels.org/).
+
+## Preparing transformations
+
+> `r fa("exclamation-circle", fill = "crimson")` **Recipes** define the necessary
+> steps _but without_ executing them!
+
+Instead of writing _and executing_ at the same time:
+
+```{r, eval=FALSE}
+lm(Sale_Price ~ Neighborhood + log10(Gr_Liv_Area) + Year_Built + Bldg_Type,
+   data = ames)
+```
+
+we can define the necessary transformations:
+
+```{r recipe_simple}
+simple_ames <- 
+  recipe(Sale_Price ~ Neighborhood + Gr_Liv_Area + Year_Built + Bldg_Type,
+         data = ames_train) %>%
+  step_log(Gr_Liv_Area, base = 10) %>% 
+  step_dummy(all_nominal_predictors())
+simple_ames
+```
+
+`r fa("plus-circle", fill = "orange")` **ADVANTAGES:**
+
+- one recipe can be re-used for different models
+- much broader range of transformations to choose from than when using `formula`
+- compact syntax (several selectors are pre-defined, such as `all_nominal()`)
+- all data preprocessing is kept in one R object
+
+## Executing transformations
+
+To execute the steps of the recipe, use `prep` function on training dataset:
+
+```{r prep_train}
+simple_ames <- prep(simple_ames, training = ames_train)
+simple_ames
+```
+
+> `r fa("exclamation-circle", fill = "crimson")` Be careful with the order of the steps,
+> since some of them change and/or delete columns in the dataset!
+
+> `r fa("info-circle", fill = "darkgreen")` `prep` returns a recipe object
+
+## Training
+
+The last step is to `bake`!
+
+```{r bake}
+test_ex <- bake(simple_ames, new_data = ames_test)
+names(test_ex) %>% head()
+```
+
+We can always choose which variables to return if the dataset is very large.
+
+```{r bake_select}
+bake(simple_ames, ames_test, starts_with("Neighborhood_"))
+```
+
+Moreover, if we want to extract the trained data, we can nullify the `new_data`
+argument:
+
+```{r}
+bake(simple_ames, new_data = NULL) %>% dim()
+dim(ames_train)
+```
+
+## Encoding
+
+There are several ways to encode qualitative data into numeric. Sometimes, it
+might be good to pre-define factor levels. Here are some of the functions that
+can be useful:
+
+- `step_unknown()` - changes all missing data to a certain level;
+- `step_novel()` - adds a level that might not be in the training data;
+- `step_other()` - combines certain labels into one level "other";
+- `step_dummy()` - performs a `pivot_wider` operation, creating binary
+indicators for all but 1 levels of the qual.var.; the new colums are named
+using the pattern `ColumnName_LevelName`, so that it's easy to catch those
+afterward, e.g., using `starts_with("Neighborhood_")`.
+
+There are also more sophisticated methods for encoding, e.g.:
+
+- **feature hashing** - encodes a variable into a pre-defined set of levels;
+this might sometimes result in assigning different values to the same level;
+needs to be use with caution;
+
+- **effect encodings/likelihood encodings** - replace the variable with a
+single numeric column measuring the _effect_ of the data, e.g., mean of the
+outcome per category; this can lead to overfitting!
+
+- `step_unorder()` - converts to a regular factor (e.g., months' names);
+- `step_ordinalscore()` - maps specific values to each level.
+
+### `r fa("edit")` Task
+
+Based on the distribution of the houses across neighborhoods, modify the
+recipe to clump the smallest 1% of the neighborhood categories into one
+category "other".
+
+```{r}
+
+```
+
+## Interaction terms
+
+It is good to explore relationships between various predictors to check whether
+there might be an interaction involved.
+
+```{r living_area_vs_bldg_type}
+ggplot(ames_train, aes(x = Gr_Liv_Area, y = 10^Sale_Price)) + 
+  geom_point(alpha = .2) + 
+  facet_wrap(~ Bldg_Type) + 
+  geom_smooth(method = lm, formula = y ~ x, se = FALSE, col = "red") + 
+  scale_x_log10() + 
+  scale_y_log10() + 
+  labs(x = "Gross Living Area", y = "Sale Price (USD)") +
+  theme_minimal()
+```
+
+In `recipes`, there is a `step_interact()` function that combines specific
+columns (_after_ encoding the qualitative variables!) using `dplyr`-like selectors.
+
+```{r}
+simple_ames <- 
+  recipe(Sale_Price ~ Neighborhood + Gr_Liv_Area + Year_Built + Bldg_Type,
+         data = ames_train) %>%
+  step_log(Gr_Liv_Area, base = 10) %>% 
+  step_other(Neighborhood, threshold = 0.01) %>% 
+  step_dummy(all_nominal_predictors()) %>% 
+  # Gr_Liv_Area is on the log scale from a previous step
+  step_interact( ~ Gr_Liv_Area:starts_with("Bldg_Type_"))
+```
+
+> `r fa("info-circle", fill = "darkgreen")` This produces columns named using
+> the pattern `var_1_x_var_2`.
+
+## Skipping steps
+
+> `r fa("exclamation-circle", fill = "crimson")` **Do not transform outcome columns!**
+> These are separated inside a recipe and can't be accessed.
+
+Some steps should be done either before defining the recipe (like transformation
+of outcome columns) or only during the training stage (like subsampling an
+imbalanced dataset). Each recipe function has a `skip` argument, which tells
+whether or not to skip this step when `baking`.
+
+> `r fa("info-circle", fill = "darkgreen")` The `themis` package has several
+> useful functions to deal with imbalanced datasets, e.g., `step_downsample()`
+
+Other useful `step` functions {.tabset}
+----
+
+### `step_ns()`
+
+Creates a _natural spline_
+
+```{r}
+library(patchwork)
+library(splines)
+
+plot_smoother <- function(deg_free) {
+  ggplot(ames_train, aes(x = Latitude, y = Sale_Price)) + 
+    geom_point(alpha = .2) + 
+    scale_y_log10() +
+    geom_smooth(
+      method = lm,
+      formula = y ~ ns(x, df = deg_free),
+      col = "red",
+      se = FALSE
+    ) +
+    ggtitle(paste(deg_free, "Spline Terms"))
+}
+
+( plot_smoother(2) + plot_smoother(5) ) / ( plot_smoother(20) + plot_smoother(100) )
+```
+
+### `step_pca()`
+
+Creates a new variable that contains a PC of several other.
+
+_In the Ames data, there are several predictors that measure size of the property, such as the total basement size (`Total_Bsmt_SF`), size of the first floor (`First_Flr_SF`), the gross living area (`Gr_Liv_Area`), and so on._
+
+We can combine those with:
+
+```{r, eval=FALSE}
+# Use a regular expression to capture house size predictors: 
+step_pca(matches("(SF$)|(Gr_Liv)"))
+```
+
+### `step_mutate()` and `step_mutate_at()`
+
+Analogous to the
+[`dplyr` functions](https://dbplyr.tidyverse.org/reference/mutate.tbl_lazy.html),
+these allow for any transformation.
+
+### `textrecipes` package
+
+[`textrecipes` package](https://textrecipes.tidymodels.org/index.html) includes
+special `step` functions adjusted for handling text data.
+
+
+## `r fa("edit")` Task
+
+Add a step in the recipe that creates a natural spline using `Latitude` data.
+
+```{r}
+
+```
+
+```{r, echo=FALSE}
+ames_rec <-
+  recipe(Sale_Price ~ Neighborhood + Gr_Liv_Area + Year_Built + Bldg_Type +
+    Latitude + Longitude, data = ames_train) %>%
+  step_log(Gr_Liv_Area, base = 10) %>%
+  step_other(Neighborhood, threshold = 0.01) %>%
+  step_dummy(all_nominal_predictors()) %>%
+  step_interact( ~ Gr_Liv_Area:starts_with("Bldg_Type_") ) %>%
+  step_ns(Latitude, Longitude, deg_free = 20)
+```
+
+## Using a `recipe` with traditional modeling
+
+```{r lm_fit}
+ames_rec_prepped <- prep(ames_rec)
+ames_train_prepped <- bake(ames_rec_prepped, new_data = NULL)
+ames_test_prepped <- bake(ames_rec_prepped, ames_test)
+
+# Fit the model; Note that the column Sale_Price has already been
+# log transformed.
+lm_fit <- lm(Sale_Price ~ ., data = ames_train_prepped)
+```
+
+We get a `lm` model object as a result:
+
+```{r}
+class(lm_fit)
+names(lm_fit)
+```
+
+The [`broom` package](https://broom.tidymodels.org/) helps clean up the
+various outputs from different modeling functions into one consist `tibble` output.
+
+```{r broom}
+glance(lm_fit)
+
+# return the model coefficients nicely formatted
+tidy(lm_fit)
+```
+
+Finally, we can predict:
+
+```{r predict}
+predict(lm_fit, ames_test_prepped) %>% head()
+```
+
+
