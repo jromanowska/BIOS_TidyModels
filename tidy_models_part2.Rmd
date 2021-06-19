@@ -229,7 +229,7 @@ outcome per category; this can lead to overfitting!
 - `step_unorder()` - converts to a regular factor (e.g., months' names);
 - `step_ordinalscore()` - maps specific values to each level.
 
-### `r fa("edit")` Task
+### `r fa("edit")` TASK
 
 Based on the distribution of the houses across neighborhoods, modify the
 recipe to clump the smallest 1% of the neighborhood categories into one
@@ -337,7 +337,7 @@ these allow for any transformation.
 special `step` functions adjusted for handling text data.
 
 
-## `r fa("edit")` Task
+## `r fa("edit")` TASK
 
 Add a step in the recipe that creates a natural spline using `Latitude` data.
 
@@ -391,4 +391,203 @@ Finally, we can predict:
 predict(lm_fit, ames_test_prepped) %>% head()
 ```
 
+**BONUS** `tidy` can also be called on a recipe:
+
+```{r}
+tidy(ames_rec)
+```
+
+## Column roles
+
+When preparing the training dataset with `prep`, only the columns that have
+a pre-assigned role will be kept. There are two roles that are automatically
+assigned when constructing a formula: **outcome** and **predictors**.
+If we want to keep some other columns in the training and testing datasets,
+we need to give them some role - this can be achieved by using `add_role()`,
+`remove_role()`, and `update_role()`, or by setting the `role` argument inside
+a `step` function.
+
+```{r, eval=FALSE}
+ames_rec %>% update_role(Address, new_role = "street address")
+```
+
+> `r fa("info-circle", fill = "darkgreen")` The role name can be any character
+> string. Columns can also have multiple roles.
+
+----
+
+# CHAPTER 7 - _Parsnip_
+
+Traditionally, in base R, fitting a model would require finding an adequate
+R package, adapting the input data to its requirements (matrix, data.frame,
+which format for outcome vs. predictors, etc.), and checking the documentation
+of the function to create a valid function call (using a formula vs. giving the
+outcome and predictors as vectors, naming the arguments correctly, etc.).
+
+The [`parsnip` package](https://parsnip.tidymodels.org/) aims to unify it by
+wrapping calls to various other packages in a single function,
+`fit` (or `fit_xy`).
+
+```{r}
+lm_model <- 
+  linear_reg() %>% 
+  set_engine("lm")
+
+lm_form_fit <- 
+  lm_model %>% 
+  fit(Sale_Price ~ Longitude + Latitude, data = ames_train)
+
+lm_xy_fit <- 
+  lm_model %>% 
+  fit_xy(
+    x = ames_train %>% select(Longitude, Latitude),
+    y = ames_train %>% pull(Sale_Price)
+    )
+    
+lm_form_fit
+lm_xy_fit
+```
+
+> `r fa("exclamation-circle", fill = "crimson")` The `fit_xy()` function always
+> passes the data as-is to the underlying model function. It will not create
+> dummy variables before doing so.
+
+The overall steps for fitting a model with `parsnip` are as follows:
+
+1. specify the type of model (maths)
+2. specify which package to use (*set engine*)
+3. *(not always)* specify the mode: **regression** or **classification**
+
+`r fa("plus-circle", fill = "orange")` **ADVANTAGES:**
+
+- these steps can be done without refering to data
+
+```{r}
+linear_reg() %>% set_engine("lm")
+
+linear_reg() %>% set_engine("glmnet") 
+
+linear_reg() %>% set_engine("stan")
+```
+
+- apply the same fitting procedure on various datasets
+- when switching between packages, only the name of the package changes in the
+code
+- argument names are consistent and understandable
+- results are always named in a consistent way
+
+## `parsnip` object
+
+The output of `fit` is a `parsnip` model object, which contains various
+elements, related to the data, model, and fitting results.
+
+```{r}
+lm_form_fit %>% pluck("fit")
+```
+
+With base R, one would get the information about the model results as follows:
+
+```{r}
+(base_res <- lm_form_fit %>% pluck("fit") %>% summary())
+coef(base_res)
+```
+
+This returns a matrix of numeric values with column names for the type of
+estimate and row names for the predictors. However, again, the results of
+different methods would contain different names of columns. Moreover, the name
+`Pr(>|t|)` is not a valid variable name in R, so it's difficult to use it.
+
+Using `broom` solves this:
+
+```{r}
+tidy(lm_form_fit)
+```
+
+## `predict`
+
+Calling `predict()` on a `parsnip` object gives different results than when
+calling it on a base-R model.
+
+```{r}
+predict(lm_form_fit, new_data = ames_test)
+```
+
+- result is always a `tibble`
+- no.of rows is always the same as no.of rows in the input
+- column names are predictable
+
+Using the `type` argument of `predict()`, we can change the columns of the 
+output:
+
+```{r}
+predict(lm_form_fit, new_data = ames_test, type = "conf_int")
+```
+
+Thus, we can e.g., easily merge the predictions with the original data!
+
+### `r fa("edit")` TASK 1
+
+Check in the documentation of the `predict.model_fit` function other types of
+output and then fill in the dots below: using `bind_cols()` function, attach the 
+predicted values and the CI to the original data `ames_test`.
+
+```{r, eval=FALSE}
+# for simplicity, we select only some of the many columns
+ames_test %>%
+  select(Sale_Price, Year_Built, Bldg_Type, Gr_Liv_Area) %>%
+  ...
+```
+
+### `r fa("edit")` TASK 2
+
+Let's change the model to *decision tree*, predict, and check the results:
+
+```{r, eval=FALSE}
+# define the model fit:
+tree_fit <- decision_tree(min_n = 2) %>%
+  # set engine 'rpart'
+  ... %>%
+  # set mode: 'regression'
+  ... %>%
+  # fit the model using the same formula as previously
+  ...
+```
+
+Finally, attach the predictions to the original testing dataset, as above:
+
+```{r, eval=FALSE}
+ames_test %>%
+  select(Sale_Price, Year_Built, Bldg_Type, Gr_Liv_Area) %>%
+  ...
+```
+
+## Other packages
+
+`parsnip` package implements interface to the most popular statistical modeling
+packages and there are other, specialized packages, similar to `parsnip` that
+have interfaces to other modeling procedures. The list of all the possible
+interfaces are [on the tidymodels website](https://www.tidymodels.org/find/).
+
+## Help creating the code
+
+The [`usemodels` package](https://usemodels.tidymodels.org/) creates the code
+that includes recipe, model, and fitting with one function call!
+
+```{r}
+library(usemodels)
+
+use_xgboost(Sale_Price ~ Neighborhood + Gr_Liv_Area + Year_Built + Bldg_Type + 
+              Latitude + Longitude, 
+            data = ames_train,
+            # Don't create the model tuning code:
+            tune = FALSE,
+            # Add comments explaining some of the code:
+            verbose = TRUE)
+```
+
+`parsnip` package gives also a handy GUI tool:
+
+```{r, eval=FALSE}
+parsnip:::parsnip_addin()
+```
 

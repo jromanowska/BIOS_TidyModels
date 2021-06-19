@@ -7,7 +7,7 @@
 
         <meta name="author" content="Julia Romanowska" />
     
-        <meta name="date" content="2021-06-17" />
+        <meta name="date" content="2021-06-19" />
     
     <title>Tidy modeling - part 2</title>
 
@@ -201,8 +201,16 @@
             <li><a href="#interaction-terms">Interaction terms</a></li>
             <li><a href="#skipping-steps">Skipping steps</a></li>
             <li><a href="#other-useful-step-functions">Other useful <code>step</code> functions</a></li>
-            <li><a href="#task-1"><svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z"></path></svg> Task</a></li>
+            <li><a href="#task-1"><svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z"></path></svg> TASK</a></li>
             <li><a href="#using-a-recipe-with-traditional-modeling">Using a <code>recipe</code> with traditional modeling</a></li>
+            <li><a href="#column-roles">Column roles</a></li>
+            </ul></li>
+            <li><a href="#chapter-7---parsnip">CHAPTER 7 - <em>Parsnip</em></a>
+            <ul>
+            <li><a href="#parsnip-object"><code>parsnip</code> object</a></li>
+            <li><a href="#predict"><code>predict</code></a></li>
+            <li><a href="#other-packages">Other packages</a></li>
+            <li><a href="#help-creating-the-code">Help creating the code</a></li>
             </ul></li>
             </ul>
           </div>
@@ -218,7 +226,7 @@
       <p class="authors">
            <span class="glyphicon glyphicon-user"></span> Julia Romanowska
       </p>
-         <p class="date"><span class="glyphicon glyphicon-calendar"></span> 2021-06-17</p>
+         <p class="date"><span class="glyphicon glyphicon-calendar"></span> 2021-06-19</p>
            
 
    
@@ -1271,7 +1279,13 @@
 ## 
 ## Log transformation on Gr_Liv_Area
 ## Dummy variables from all_nominal_predictors()</code></pre>
-<p><svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:orange;overflow:visible;position:relative;"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm144 276c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92h-92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z"></path></svg> <strong>ADVANTAGES:</strong> - one recipe can be re-used for different models - much broader range of transformations to choose from than when using <code>formula</code> - compact syntax (several selectors are pre-defined, such as <code>all_nominal()</code>) - all data preprocessing is kept in one R object</p>
+<p><svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:orange;overflow:visible;position:relative;"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm144 276c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92h-92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z"></path></svg> <strong>ADVANTAGES:</strong></p>
+<ul>
+<li>one recipe can be re-used for different models</li>
+<li>much broader range of transformations to choose from than when using <code>formula</code></li>
+<li>compact syntax (several selectors are pre-defined, such as <code>all_nominal()</code>)</li>
+<li>all data preprocessing is kept in one R object</li>
+</ul>
 </div>
 <div id="executing-transformations" class="section level2">
 <h2>Executing transformations</h2>
@@ -1359,7 +1373,7 @@
 <li><p><code>step_ordinalscore()</code> - maps specific values to each level.</p></li>
 </ul>
 <div id="task" class="section level3">
-<h3><svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z"></path></svg> Task</h3>
+<h3><svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z"></path></svg> TASK</h3>
 <p>Based on the distribution of the houses across neighborhoods, modify the recipe to clump the smallest 1% of the neighborhood categories into one category “other”.</p>
 </div>
 </div>
@@ -1440,7 +1454,7 @@
 </div>
 </div>
 <div id="task-1" class="section level2">
-<h2><svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z"></path></svg> Task</h2>
+<h2><svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z"></path></svg> TASK</h2>
 <p>Add a step in the recipe that creates a natural spline using <code>Latitude</code> data.</p>
 </div>
 <div id="using-a-recipe-with-traditional-modeling" class="section level2">
@@ -1453,165 +1467,21 @@
 <span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="co"># log transformed.</span></span>
 <span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>lm_fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(Sale_Price <span class="sc">~</span> ., <span class="at">data =</span> ames_train_prepped)</span></code></pre></div>
 <p>We get a <code>lm</code> model object as a result:</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>lm_fit</span></code></pre></div>
-<pre><code>## 
-## Call:
-## lm(formula = Sale_Price ~ ., data = ames_train_prepped)
-## 
-## Coefficients:
-##                                          (Intercept)  
-##                                            -0.230502  
-##                                          Gr_Liv_Area  
-##                                             0.644264  
-##                                           Year_Built  
-##                                             0.001784  
-##                           Neighborhood_College_Creek  
-##                                            -0.010125  
-##                                Neighborhood_Old_Town  
-##                                            -0.049624  
-##                                 Neighborhood_Edwards  
-##                                            -0.092959  
-##                                Neighborhood_Somerset  
-##                                             0.070832  
-##                      Neighborhood_Northridge_Heights  
-##                                             0.133255  
-##                                 Neighborhood_Gilbert  
-##                                             0.031456  
-##                                  Neighborhood_Sawyer  
-##                                            -0.113876  
-##                          Neighborhood_Northwest_Ames  
-##                                             0.005327  
-##                             Neighborhood_Sawyer_West  
-##                                            -0.116642  
-##                                Neighborhood_Mitchell  
-##                                            -0.004322  
-##                               Neighborhood_Brookside  
-##                                            -0.026576  
-##                                Neighborhood_Crawford  
-##                                             0.172489  
-##                  Neighborhood_Iowa_DOT_and_Rail_Road  
-##                                            -0.037131  
-##                              Neighborhood_Timberland  
-##                                             0.027997  
-##                              Neighborhood_Northridge  
-##                                             0.051362  
-##                             Neighborhood_Stone_Brook  
-##                                             0.178156  
-## Neighborhood_South_and_West_of_Iowa_State_University  
-##                                             0.004693  
-##                             Neighborhood_Clear_Creek  
-##                                            -0.042710  
-##                          Neighborhood_Meadow_Village  
-##                                            -0.154453  
-##                               Neighborhood_Briardale  
-##                                            -0.121995  
-##                                   Neighborhood_other  
-##                                             0.066761  
-##                                   Bldg_Type_TwoFmCon  
-##                                             0.686619  
-##                                     Bldg_Type_Duplex  
-##                                             0.626906  
-##                                      Bldg_Type_Twnhs  
-##                                             1.167452  
-##                                     Bldg_Type_TwnhsE  
-##                                             0.033896  
-##                     Gr_Liv_Area_x_Bldg_Type_TwoFmCon  
-##                                            -0.230943  
-##                       Gr_Liv_Area_x_Bldg_Type_Duplex  
-##                                            -0.229576  
-##                        Gr_Liv_Area_x_Bldg_Type_Twnhs  
-##                                            -0.399940  
-##                       Gr_Liv_Area_x_Bldg_Type_TwnhsE  
-##                                            -0.019335  
-##                                       Latitude_ns_01  
-##                                            -0.070830  
-##                                       Latitude_ns_02  
-##                                            -0.102871  
-##                                       Latitude_ns_03  
-##                                            -0.061466  
-##                                       Latitude_ns_04  
-##                                            -0.091925  
-##                                       Latitude_ns_05  
-##                                            -0.067353  
-##                                       Latitude_ns_06  
-##                                             0.066006  
-##                                       Latitude_ns_07  
-##                                             0.005711  
-##                                       Latitude_ns_08  
-##                                             0.002668  
-##                                       Latitude_ns_09  
-##                                            -0.009174  
-##                                       Latitude_ns_10  
-##                                            -0.029089  
-##                                       Latitude_ns_11  
-##                                             0.026476  
-##                                       Latitude_ns_12  
-##                                            -0.001739  
-##                                       Latitude_ns_13  
-##                                            -0.005266  
-##                                       Latitude_ns_14  
-##                                            -0.038414  
-##                                       Latitude_ns_15  
-##                                             0.013895  
-##                                       Latitude_ns_16  
-##                                             0.009823  
-##                                       Latitude_ns_17  
-##                                            -0.088486  
-##                                       Latitude_ns_18  
-##                                            -0.070091  
-##                                       Latitude_ns_19  
-##                                             0.038949  
-##                                       Latitude_ns_20  
-##                                            -0.051293  
-##                                      Longitude_ns_01  
-##                                             0.020090  
-##                                      Longitude_ns_02  
-##                                             0.010817  
-##                                      Longitude_ns_03  
-##                                             0.020552  
-##                                      Longitude_ns_04  
-##                                            -0.013315  
-##                                      Longitude_ns_05  
-##                                            -0.033380  
-##                                      Longitude_ns_06  
-##                                            -0.068780  
-##                                      Longitude_ns_07  
-##                                            -0.083273  
-##                                      Longitude_ns_08  
-##                                            -0.136332  
-##                                      Longitude_ns_09  
-##                                            -0.070852  
-##                                      Longitude_ns_10  
-##                                            -0.113688  
-##                                      Longitude_ns_11  
-##                                            -0.097057  
-##                                      Longitude_ns_12  
-##                                            -0.043601  
-##                                      Longitude_ns_13  
-##                                            -0.111231  
-##                                      Longitude_ns_14  
-##                                            -0.110739  
-##                                      Longitude_ns_15  
-##                                            -0.096150  
-##                                      Longitude_ns_16  
-##                                            -0.067287  
-##                                      Longitude_ns_17  
-##                                            -0.113140  
-##                                      Longitude_ns_18  
-##                                            -0.105632  
-##                                      Longitude_ns_19  
-##                                            -0.106758  
-##                                      Longitude_ns_20  
-##                                            -0.131104</code></pre>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(lm_fit)</span></code></pre></div>
+<pre><code>## [1] &quot;lm&quot;</code></pre>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(lm_fit)</span></code></pre></div>
+<pre><code>##  [1] &quot;coefficients&quot;  &quot;residuals&quot;     &quot;effects&quot;       &quot;rank&quot;         
+##  [5] &quot;fitted.values&quot; &quot;assign&quot;        &quot;qr&quot;            &quot;df.residual&quot;  
+##  [9] &quot;xlevels&quot;       &quot;call&quot;          &quot;terms&quot;         &quot;model&quot;</code></pre>
 <p>The <a href="https://broom.tidymodels.org/"><code>broom</code> package</a> helps clean up the various outputs from different modeling functions into one consist <code>tibble</code> output.</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glance</span>(lm_fit)</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glance</span>(lm_fit)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 12
 ##   r.squared adj.r.squared  sigma statistic p.value    df logLik    AIC    BIC
 ##       &lt;dbl&gt;         &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
 ## 1     0.830         0.825 0.0745      156.       0    71  2795. -5445. -5025.
 ## # … with 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># return the model coefficients nicely formatted</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lm_fit)</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># return the model coefficients nicely formatted</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lm_fit)</span></code></pre></div>
 <pre><code>## # A tibble: 72 x 5
 ##    term                            estimate std.error statistic   p.value
 ##    &lt;chr&gt;                              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
@@ -1627,9 +1497,254 @@
 ## 10 Neighborhood_Sawyer             -0.114    0.0256      -4.45  8.92e-  6
 ## # … with 62 more rows</code></pre>
 <p>Finally, we can predict:</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(lm_fit, ames_test_prepped) <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(lm_fit, ames_test_prepped) <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code></pre></div>
 <pre><code>##        1        2        3        4        5        6 
 ## 5.305471 5.658622 5.044864 5.190953 5.458330 5.324659</code></pre>
+<p><strong>BONUS</strong> <code>tidy</code> can also be called on a recipe:</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(ames_rec)</span></code></pre></div>
+<pre><code>## # A tibble: 5 x 6
+##   number operation type     trained skip  id            
+##    &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;    &lt;lgl&gt;   &lt;lgl&gt; &lt;chr&gt;         
+## 1      1 step      log      FALSE   FALSE log_NTpEv     
+## 2      2 step      other    FALSE   FALSE other_0uPVA   
+## 3      3 step      dummy    FALSE   FALSE dummy_Wh8J2   
+## 4      4 step      interact FALSE   FALSE interact_waYdX
+## 5      5 step      ns       FALSE   FALSE ns_BBK7v</code></pre>
+</div>
+<div id="column-roles" class="section level2">
+<h2>Column roles</h2>
+<p>When preparing the training dataset with <code>prep</code>, only the columns that have a pre-assigned role will be kept. There are two roles that are automatically assigned when constructing a formula: <strong>outcome</strong> and <strong>predictors</strong>. If we want to keep some other columns in the training and testing datasets, we need to give them some role - this can be achieved by using <code>add_role()</code>, <code>remove_role()</code>, and <code>update_role()</code>, or by setting the <code>role</code> argument inside a <code>step</code> function.</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>ames_rec <span class="sc">%&gt;%</span> <span class="fu">update_role</span>(Address, <span class="at">new_role =</span> <span class="st">&quot;street address&quot;</span>)</span></code></pre></div>
+<blockquote>
+<p><svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:darkgreen;overflow:visible;position:relative;"><path d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"></path></svg> The role name can be any character string. Columns can also have multiple roles.</p>
+</blockquote>
+<hr />
+</div>
+</div>
+<div id="chapter-7---parsnip" class="section level1">
+<h1>CHAPTER 7 - <em>Parsnip</em></h1>
+<p>Traditionally, in base R, fitting a model would require finding an adequate R package, adapting the input data to its requirements (matrix, data.frame, which format for outcome vs. predictors, etc.), and checking the documentation of the function to create a valid function call (using a formula vs. giving the outcome and predictors as vectors, naming the arguments correctly, etc.).</p>
+<p>The <a href="https://parsnip.tidymodels.org/"><code>parsnip</code> package</a> aims to unify it by wrapping calls to various other packages in a single function, <code>fit</code> (or <code>fit_xy</code>).</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>lm_model <span class="ot">&lt;-</span> </span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">linear_reg</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">&quot;lm&quot;</span>)</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>lm_form_fit <span class="ot">&lt;-</span> </span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>  lm_model <span class="sc">%&gt;%</span> </span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(Sale_Price <span class="sc">~</span> Longitude <span class="sc">+</span> Latitude, <span class="at">data =</span> ames_train)</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>lm_xy_fit <span class="ot">&lt;-</span> </span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>  lm_model <span class="sc">%&gt;%</span> </span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit_xy</span>(</span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> ames_train <span class="sc">%&gt;%</span> <span class="fu">select</span>(Longitude, Latitude),</span>
+<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> ames_train <span class="sc">%&gt;%</span> <span class="fu">pull</span>(Sale_Price)</span>
+<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb44-16"><a href="#cb44-16" aria-hidden="true" tabindex="-1"></a>lm_form_fit</span></code></pre></div>
+<pre><code>## parsnip model object
+## 
+## Fit time:  2ms 
+## 
+## Call:
+## stats::lm(formula = Sale_Price ~ Longitude + Latitude, data = data)
+## 
+## Coefficients:
+## (Intercept)    Longitude     Latitude  
+##    -310.256       -2.062        2.912</code></pre>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>lm_xy_fit</span></code></pre></div>
+<pre><code>## parsnip model object
+## 
+## Fit time:  2ms 
+## 
+## Call:
+## stats::lm(formula = ..y ~ ., data = data)
+## 
+## Coefficients:
+## (Intercept)    Longitude     Latitude  
+##    -310.256       -2.062        2.912</code></pre>
+<blockquote>
+<p><svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:crimson;overflow:visible;position:relative;"><path d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zm-248 50c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"></path></svg> The <code>fit_xy()</code> function always passes the data as-is to the underlying model function. It will not create dummy variables before doing so.</p>
+</blockquote>
+<p>The overall steps for fitting a model with <code>parsnip</code> are as follows:</p>
+<ol style="list-style-type: decimal">
+<li>specify the type of model (maths)</li>
+<li>specify which package to use (<em>set engine</em>)</li>
+<li><em>(not always)</em> specify the mode: <strong>regression</strong> or <strong>classification</strong></li>
+</ol>
+<p><svg aria-hidden="true" role="img" viewBox="0 0 512 512" style="height:1em;width:1em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:orange;overflow:visible;position:relative;"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm144 276c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92h-92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z"></path></svg> <strong>ADVANTAGES:</strong></p>
+<ul>
+<li>these steps can be done without refering to data</li>
+</ul>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linear_reg</span>() <span class="sc">%&gt;%</span> <span class="fu">set_engine</span>(<span class="st">&quot;lm&quot;</span>)</span></code></pre></div>
+<pre><code>## Linear Regression Model Specification (regression)
+## 
+## Computational engine: lm</code></pre>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linear_reg</span>() <span class="sc">%&gt;%</span> <span class="fu">set_engine</span>(<span class="st">&quot;glmnet&quot;</span>) </span></code></pre></div>
+<pre><code>## Linear Regression Model Specification (regression)
+## 
+## Computational engine: glmnet</code></pre>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">linear_reg</span>() <span class="sc">%&gt;%</span> <span class="fu">set_engine</span>(<span class="st">&quot;stan&quot;</span>)</span></code></pre></div>
+<pre><code>## Linear Regression Model Specification (regression)
+## 
+## Computational engine: stan</code></pre>
+<ul>
+<li>apply the same fitting procedure on various datasets</li>
+<li>when switching between packages, only the name of the package changes in the code</li>
+<li>argument names are consistent and understandable</li>
+<li>results are always named in a consistent way</li>
+</ul>
+<div id="parsnip-object" class="section level2">
+<h2><code>parsnip</code> object</h2>
+<p>The output of <code>fit</code> is a <code>parsnip</code> model object, which contains various elements, related to the data, model, and fitting results.</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>lm_form_fit <span class="sc">%&gt;%</span> <span class="fu">pluck</span>(<span class="st">&quot;fit&quot;</span>)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## stats::lm(formula = Sale_Price ~ Longitude + Latitude, data = data)
+## 
+## Coefficients:
+## (Intercept)    Longitude     Latitude  
+##    -310.256       -2.062        2.912</code></pre>
+<p>With base R, one would get the information about the model results as follows:</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>(base_res <span class="ot">&lt;-</span> lm_form_fit <span class="sc">%&gt;%</span> <span class="fu">pluck</span>(<span class="st">&quot;fit&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">summary</span>())</span></code></pre></div>
+<pre><code>## 
+## Call:
+## stats::lm(formula = Sale_Price ~ Longitude + Latitude, data = data)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1.02084 -0.09724 -0.01740  0.09994  0.57713 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -310.2557    14.6859  -21.13   &lt;2e-16 ***
+## Longitude     -2.0616     0.1308  -15.76   &lt;2e-16 ***
+## Latitude       2.9124     0.1825   15.96   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.1621 on 2339 degrees of freedom
+## Multiple R-squared:  0.1719, Adjusted R-squared:  0.1712 
+## F-statistic: 242.8 on 2 and 2339 DF,  p-value: &lt; 2.2e-16</code></pre>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(base_res)</span></code></pre></div>
+<pre><code>##                Estimate Std. Error   t value     Pr(&gt;|t|)
+## (Intercept) -310.255727 14.6859321 -21.12605 8.227707e-91
+## Longitude     -2.061597  0.1307906 -15.76257 2.817305e-53
+## Latitude       2.912419  0.1824514  15.96271 1.585297e-54</code></pre>
+<p>This returns a matrix of numeric values with column names for the type of estimate and row names for the predictors. However, again, the results of different methods would contain different names of columns. Moreover, the name <code>Pr(&gt;|t|)</code> is not a valid variable name in R, so it’s difficult to use it.</p>
+<p>Using <code>broom</code> solves this:</p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(lm_form_fit)</span></code></pre></div>
+<pre><code>## # A tibble: 3 x 5
+##   term        estimate std.error statistic  p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)  -310.      14.7       -21.1 8.23e-91
+## 2 Longitude      -2.06     0.131     -15.8 2.82e-53
+## 3 Latitude        2.91     0.182      16.0 1.59e-54</code></pre>
+</div>
+<div id="predict" class="section level2">
+<h2><code>predict</code></h2>
+<p>Calling <code>predict()</code> on a <code>parsnip</code> object gives different results than when calling it on a base-R model.</p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(lm_form_fit, <span class="at">new_data =</span> ames_test)</span></code></pre></div>
+<pre><code>## # A tibble: 588 x 1
+##    .pred
+##    &lt;dbl&gt;
+##  1  5.28
+##  2  5.26
+##  3  5.24
+##  4  5.23
+##  5  5.32
+##  6  5.30
+##  7  5.29
+##  8  5.29
+##  9  5.29
+## 10  5.29
+## # … with 578 more rows</code></pre>
+<ul>
+<li>result is always a <code>tibble</code></li>
+<li>no.of rows is always the same as no.of rows in the input</li>
+<li>column names are predictable</li>
+</ul>
+<p>Using the <code>type</code> argument of <code>predict()</code>, we can change the columns of the output:</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(lm_form_fit, <span class="at">new_data =</span> ames_test, <span class="at">type =</span> <span class="st">&quot;conf_int&quot;</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 588 x 2
+##    .pred_lower .pred_upper
+##          &lt;dbl&gt;       &lt;dbl&gt;
+##  1        5.27        5.30
+##  2        5.25        5.28
+##  3        5.23        5.25
+##  4        5.22        5.24
+##  5        5.31        5.33
+##  6        5.29        5.31
+##  7        5.28        5.31
+##  8        5.28        5.30
+##  9        5.28        5.30
+## 10        5.28        5.29
+## # … with 578 more rows</code></pre>
+<p>Thus, we can e.g., easily merge the predictions with the original data!</p>
+<div id="task-1-1" class="section level3">
+<h3><svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z"></path></svg> TASK 1</h3>
+<p>Check in the documentation of the <code>predict.model_fit</code> function other types of output and then fill in the dots below: using <code>bind_cols()</code> function, attach the predicted values and the CI to the original data <code>ames_test</code>.</p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co"># for simplicity, we select only some of the many columns</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>ames_test <span class="sc">%&gt;%</span></span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Sale_Price, Year_Built, Bldg_Type, Gr_Liv_Area) <span class="sc">%&gt;%</span></span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>  ...</span></code></pre></div>
+</div>
+<div id="task-2" class="section level3">
+<h3><svg aria-hidden="true" role="img" viewBox="0 0 576 512" style="height:1em;width:1.12em;vertical-align:-0.125em;margin-left:auto;margin-right:auto;font-size:inherit;fill:currentColor;overflow:visible;position:relative;"><path d="M402.6 83.2l90.2 90.2c3.8 3.8 3.8 10 0 13.8L274.4 405.6l-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8L388.8 83.2c3.8-3.8 10-3.8 13.8 0zm162-22.9l-48.8-48.8c-15.2-15.2-39.9-15.2-55.2 0l-35.4 35.4c-3.8 3.8-3.8 10 0 13.8l90.2 90.2c3.8 3.8 10 3.8 13.8 0l35.4-35.4c15.2-15.3 15.2-40 0-55.2zM384 346.2V448H64V128h229.8c3.2 0 6.2-1.3 8.5-3.5l40-40c7.6-7.6 2.2-20.5-8.5-20.5H48C21.5 64 0 85.5 0 112v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V306.2c0-10.7-12.9-16-20.5-8.5l-40 40c-2.2 2.3-3.5 5.3-3.5 8.5z"></path></svg> TASK 2</h3>
+<p>Let’s change the model to <em>decision tree</em>, predict, and check the results:</p>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define the model fit:</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>tree_fit <span class="ot">&lt;-</span> <span class="fu">decision_tree</span>(<span class="at">min_n =</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># set engine &#39;rpart&#39;</span></span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>  ... <span class="sc">%&gt;%</span></span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># set mode: &#39;regression&#39;</span></span>
+<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a>  ... <span class="sc">%&gt;%</span></span>
+<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># fit the model using the same formula as previously</span></span>
+<span id="cb67-8"><a href="#cb67-8" aria-hidden="true" tabindex="-1"></a>  ...</span></code></pre></div>
+<p>Finally, attach the predictions to the original testing dataset, as above:</p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>ames_test <span class="sc">%&gt;%</span></span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Sale_Price, Year_Built, Bldg_Type, Gr_Liv_Area) <span class="sc">%&gt;%</span></span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>  ...</span></code></pre></div>
+</div>
+</div>
+<div id="other-packages" class="section level2">
+<h2>Other packages</h2>
+<p><code>parsnip</code> package implements interface to the most popular statistical modeling packages and there are other, specialized packages, similar to <code>parsnip</code> that have interfaces to other modeling procedures. The list of all the possible interfaces are <a href="https://www.tidymodels.org/find/">on the tidymodels website</a>.</p>
+</div>
+<div id="help-creating-the-code" class="section level2">
+<h2>Help creating the code</h2>
+<p>The <a href="https://usemodels.tidymodels.org/"><code>usemodels</code> package</a> creates the code that includes recipe, model, and fitting with one function call!</p>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(usemodels)</span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a><span class="fu">use_xgboost</span>(Sale_Price <span class="sc">~</span> Neighborhood <span class="sc">+</span> Gr_Liv_Area <span class="sc">+</span> Year_Built <span class="sc">+</span> Bldg_Type <span class="sc">+</span> </span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a>              Latitude <span class="sc">+</span> Longitude, </span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> ames_train,</span>
+<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Don&#39;t create the model tuning code:</span></span>
+<span id="cb69-7"><a href="#cb69-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">tune =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb69-8"><a href="#cb69-8" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Add comments explaining some of the code:</span></span>
+<span id="cb69-9"><a href="#cb69-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">verbose =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## xgboost_recipe &lt;- 
+##   recipe(formula = Sale_Price ~ Neighborhood + Gr_Liv_Area + Year_Built + Bldg_Type + 
+##     Latitude + Longitude, data = ames_train) %&gt;% 
+##   step_novel(all_nominal(), -all_outcomes()) %&gt;% 
+##   ## This model requires the predictors to be numeric. The most common 
+##   ## method to convert qualitative predictors to numeric is to create 
+##   ## binary indicator variables (aka dummy variables) from these 
+##   ## predictors. However, for this model, binary indicator variables can be 
+##   ## made for each of the levels of the factors (known as &#39;one-hot 
+##   ## encoding&#39;). 
+##   step_dummy(all_nominal(), -all_outcomes(), one_hot = TRUE) %&gt;% 
+##   step_zv(all_predictors()) 
+## 
+## xgboost_spec &lt;- 
+##   boost_tree() %&gt;% 
+##   set_mode(&quot;regression&quot;) %&gt;% 
+##   set_engine(&quot;xgboost&quot;) 
+## 
+## xgboost_workflow &lt;- 
+##   workflow() %&gt;% 
+##   add_recipe(xgboost_recipe) %&gt;% 
+##   add_model(xgboost_spec)</code></pre>
+<p><code>parsnip</code> package gives also a handy GUI tool:</p>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>parsnip<span class="sc">:::</span><span class="fu">parsnip_addin</span>()</span></code></pre></div>
 </div>
 </div>
 </div>
