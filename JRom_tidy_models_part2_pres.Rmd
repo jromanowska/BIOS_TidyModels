@@ -1,0 +1,153 @@
+---
+title: "Tidy modeling"
+subtitle: "chapters 4-7"
+author: "Julia Romanowska"
+date: 'June 24, 2021'
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: xaringan-themer.css
+    seal: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+
+library(fontawesome)
+
+# setting up extra features:
+library(xaringanExtra)
+use_scribble()
+use_tachyons()
+use_fit_screen()
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+library(xaringanthemer)
+style_duo_accent(
+  primary_color = "#1381B0",
+  secondary_color = "#FF961C",
+  inverse_header_color = "#FFFFFF"
+)
+```
+
+background-image: url("img/diana-akhmetianova-u_jt9A7FADk-unsplash.jpg")
+background-position: right
+
+class: left, top, inverse
+
+.avenir.fw900.f1.purple[
+Tidy modeling
+]
+
+.avenir.fw900.f2.purple[
+chapters 4-7
+
+<br>
+Julia Romanowska
+]
+
+<br>
+.avenir.fw900.f4.white[
+June 24, 2021
+]
+
+
+<p style="font-size: 12pt; right: 10px; bottom: 20px; color: black; position: absolute;"> 
+Photo by <a href="https://unsplash.com/@dreamcraftlove?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Diana Akhmetianova</a> on <a href="https://unsplash.com/?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
+</p>
+
+---
+
+# WHY? `r fa("question-circle")`
+## why new way of coding?
+
+- modularity
+
+- consistency
+
+- ease of adaptation
+
+- reproducibility
+
+---
+
+# PRINCIPLES
+## BEHIND TIDY MODELING
+
+- consisten naming
+
+- create preparation steps without seeing the data
+
+- easily switch between various models and packages
+
+- output is "compatible" with input
+
+---
+
+name: idea
+
+# THE IDEA `r fa("lightbulb")`
+
+### **Training**
+
+1. create a [`recipe`](#recipes) for how to handle predictor variables
+2. `prep`are training dataset
+3. and train the model on the data (`bake`)
+
+--
+
+name: idea2
+
+### **Fitting**
+
+4. choose mathematical model
+5. choose the package to handle fitting [(`set engine`)](#engine)
+6. fit!
+
+--
+
+name: idea3
+
+### **Results**
+
+7. [`tidy`](#broom) the output
+8. `predict` the outcome using test dataset
+
+---
+
+name: recipes
+
+background-image: url("img/recipes.png")
+background-position: center
+background-size: contain
+
+.footnote[aRt created by [Allison Horst](https://github.com/allisonhorst/stats-illustrations)
+
+[back](#idea)]
+
+---
+
+name: engine
+
+background-image: url("img/parsnip.png")
+background-position: center
+background-size: contain
+
+.footnote[aRt created by [Allison Horst](https://github.com/allisonhorst/stats-illustrations)
+
+[back](#idea2)]
+
+---
+
+name: broom
+
+background-image: url("img/broom_package.png")
+background-position: center
+background-size: contain
+
+.footnote[aRt created by [Allison Horst](https://github.com/allisonhorst/stats-illustrations)]
